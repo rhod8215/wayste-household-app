@@ -30,6 +30,9 @@ plugins/android.json
 plugins/ios.json
 $RECYCLE.BIN/
 
+# API Keys
+src/environments/config.*
+
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
