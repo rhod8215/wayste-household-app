@@ -1,0 +1,9 @@
+<ng-container *ngIf="isUserLoaded else loadingUser">
+  <ion-router-outlet [animated]="false"></ion-router-outlet>
+</ng-container>
+
+<ng-template #loadingUser>
+  <div class="Spinner">
+    <ion-spinner></ion-spinner>
+  </div>
+</ng-template>

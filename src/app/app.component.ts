@@ -4,6 +4,8 @@ import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
+import { AuthService } from '@shared/services/auth.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -23,12 +25,19 @@ export class AppComponent {
     }
   ];
 
+  isLoggedIn: boolean;
+
   constructor(
+    private auth: AuthService,
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar
   ) {
     this.initializeApp();
+
+    this.auth.$currentAuthUser.subscribe(user => {
+      this.isLoggedIn = !!user;
+    });
   }
 
   initializeApp() {
@@ -36,5 +45,9 @@ export class AppComponent {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
+  }
+
+  signOut() {
+    this.auth.signOut();
   }
 }
