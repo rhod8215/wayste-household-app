@@ -11,6 +11,8 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireStorageModule, StorageBucket } from '@angular/fire/storage';
 import { firebaseConfig } from '@env/config';
 
 @NgModule({
@@ -22,11 +24,14 @@ import { firebaseConfig } from '@env/config';
     AppRoutingModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireAuthModule,
+    AngularFirestoreModule,
+    AngularFireStorageModule,
   ],
   providers: [
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: StorageBucket, useValue: firebaseConfig.storageBucket },
   ],
   bootstrap: [AppComponent]
 })

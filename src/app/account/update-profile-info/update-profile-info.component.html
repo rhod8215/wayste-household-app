@@ -1,0 +1,43 @@
+<ion-toolbar>
+  <ion-title>
+    Update Profile Info
+  </ion-title>
+  <ion-buttons slot="end">
+    <ion-button (click)="closeModal()">
+      <ion-icon slot="icon-only" name="close"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+
+<ion-content padding>
+  <ion-card>
+    <form [formGroup]="updateInfoForm">
+      <ion-item lines="full" text-wrap>
+        <ion-label position="stacked">Name</ion-label>
+        <ion-input type="text" formControlName="fullName" placeholder="Name"></ion-input>
+      </ion-item>
+      <ion-item lines="full" text-wrap>
+        <ion-label position="stacked">E-mail (disabled)</ion-label>
+        <ion-input type="email" formControlName="email" placeholder="Email"></ion-input>
+      </ion-item>
+      <ion-item lines="full" text-wrap>
+        <ion-label position="stacked">Contact Number</ion-label>
+        <ion-input type="number" formControlName="contactNumber" placeholder="Contact Number"></ion-input>
+      </ion-item>
+
+      <ion-item lines="full" text-wrap>
+        <ion-label position="stacked">Address</ion-label>
+        <ion-input type="text" formControlName="address" placeholder="Address"></ion-input>
+      </ion-item>
+    </form>
+  </ion-card>
+
+  <div *ngIf="error" padding-top padding-left>
+    <ion-note color="danger">{{ error.message }}</ion-note>
+  </div>
+  <div padding-top>
+    <ion-button (click)="saveChanges()">
+      Save Changes
+    </ion-button>
+  </div>
+</ion-content>

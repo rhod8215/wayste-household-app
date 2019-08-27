@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { auth } from 'firebase/app';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,10 @@ export class AuthService {
   currentAuthUser: firebase.User;
   $currentAuthUser: BehaviorSubject<firebase.User|null>;
 
-  constructor(private afAuth: AngularFireAuth) {
+  constructor(
+    private afAuth: AngularFireAuth,
+    private userService: UserService
+  ) {
     this.init();
   }
 
@@ -24,6 +28,8 @@ export class AuthService {
         this.$currentAuthUser.next(null);
         this.currentAuthUser = null;
       }
+
+      this.userService.setCurrentUser(user);
     });
   }
 
@@ -38,12 +44,19 @@ export class AuthService {
   async signUpViaEmail(
     fullName: string,
     email: string,
-    // contactNumber: string, // TO DO / Postponed: contactNumber for firebase is for auth purposes too
     password: string,
   ) {
     await this.afAuth.auth
       .createUserWithEmailAndPassword(email, password);
-    await this.updateProfile(fullName);
+
+    // assumption -- currentAuthUser should already be loaded by now
+    await this.updateName(fullName);
+    await this.userService.createUser(
+      this.currentAuthUser.uid,
+      fullName,
+      email,
+    );
+    await this.userService.setCurrentUser(this.currentAuthUser);
   }
 
   async authViaGoogle() {
@@ -58,19 +71,39 @@ export class AuthService {
     await this.afAuth.auth.signInWithRedirect(provider);
   }
 
-  async updateProfile(
-    fullName: string,
+  async updateName(
+    fullName: string|null,
   ) {
     if (!this.currentAuthUser) {
       throw new Error('No user logged in');
     }
-    await this.currentAuthUser.updateProfile({displayName: fullName});
+
+    const newProfileInfo = {
+      displayName: fullName,
+    };
+
+    await this.currentAuthUser.updateProfile(newProfileInfo);
+  }
+
+  async updatePhotoUrl(
+    photoUrl: string|null,
+  ) {
+    if (!this.currentAuthUser) {
+      throw new Error('No user logged in');
+    }
+
+    const newProfileInfo = {
+      photoURL: photoUrl,
+    };
+
+    await this.currentAuthUser.updateProfile(newProfileInfo);
   }
 
   async resetPassword() {
     if (!this.currentAuthUser) {
       throw new Error('No user logged in');
     }
+
     await this.afAuth.auth.sendPasswordResetEmail(this.currentAuthUser.email);
   }
 
