@@ -16,6 +16,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule, StorageBucket } from '@angular/fire/storage';
 import { AgmCoreModule } from '@agm/core';
+import { AngularCropperjsModule } from 'angular-cropperjs';
 import { firebaseConfig, googleAPIKey } from '@env/config';
 
 import { LocationService } from '@shared/services/location.service';
@@ -31,6 +32,7 @@ import { LocationService } from '@shared/services/location.service';
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireStorageModule,
+    AngularCropperjsModule,
     AgmCoreModule.forRoot({
       apiKey: googleAPIKey,
       libraries: ['places']

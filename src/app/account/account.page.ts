@@ -1,14 +1,13 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { ModalController, Platform } from '@ionic/angular';
-import { AngularFireStorage } from '@angular/fire/storage';
 
 import { Subscription } from 'rxjs';
-import { finalize } from 'rxjs/operators';
 
 import { AuthService } from '@shared/services/auth.service';
 import { UserService } from '@shared/services/user.service';
 
 import { UpdateProfileInfoComponent } from './update-profile-info/update-profile-info.component';
+import { PhotoCropperComponent } from './photo-cropper/photo-cropper.component';
 
 @Component({
   selector: 'app-account',
@@ -24,7 +23,6 @@ export class AccountPage implements OnInit, OnDestroy {
   constructor(
     private modalCtrl: ModalController,
     private auth: AuthService,
-    private afStorage: AngularFireStorage,
     private userService: UserService,
     private changeRef: ChangeDetectorRef,
     private platform: Platform,
@@ -51,6 +49,7 @@ export class AccountPage implements OnInit, OnDestroy {
         this.changeRef.detectChanges();
       }
     });
+
   }
 
   ngOnDestroy(): void {
@@ -61,34 +60,36 @@ export class AccountPage implements OnInit, OnDestroy {
     const reader = new FileReader();
     if (event.target.files && event.target.files.length) {
       const [ file ] = event.target.files;
-      this.uploadAuthPhoto(file);
+      reader.onload = () => {
+        this.openPhotoCropper(reader.result, file.type);
+      };
+      reader.readAsDataURL(file);
     }
   }
 
-  uploadAuthPhoto(file) {
-    const filePath = `image/dp/household_${this.auth.currentAuthUser.uid}`;
-    const fileRef = this.afStorage.ref(filePath);
-    const task = this.afStorage.upload(filePath, file);
+  /**
+   * @param fileDataUrl Base64url formatted string
+   */
+  async openPhotoCropper(fileDataUrl: string|ArrayBuffer, fileType: string) {
+    const modal = await this.modalCtrl.create({
+      component: PhotoCropperComponent,
+      componentProps: {
+        imageDataUrl: fileDataUrl,
+        fileType
+      },
+    });
 
-    // this.uploadPercent = task.percentageChanges();
-    // get notified when the download URL is available
-    task.snapshotChanges().pipe(
-        finalize(() => {
-          fileRef
-            .getDownloadURL()
-            .toPromise()
-            .then(url => {
-              this.auth.updatePhotoUrl(url)
-                .then(() => {
-                  this.appUserInfo.photoUrl = url;
-                  this.changeRef.detectChanges();
-                })
-            });
-        })
-     )
-    .subscribe()
+    modal.onDidDismiss()
+      .then((returnedData) => {
+        if (returnedData.data) {
+          this.appUserInfo = {
+            ...this.appUserInfo,
+            photoUrl: returnedData.data
+          };
+        }
+      });
+    return await modal.present();
   }
-
 
   async onCordovaUpload() {
     // const cameraOptions: CameraOptions = {
@@ -141,8 +142,6 @@ export class AccountPage implements OnInit, OnDestroy {
       imageFileInput.click();
     }
   }
-
-
 
   async openEditAccountModal() {
     const modal = await this.modalCtrl.create({

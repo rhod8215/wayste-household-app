@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { finalize } from 'rxjs/operators';
+
 import { auth } from 'firebase/app';
 import { BehaviorSubject } from 'rxjs';
 import { UserService } from './user.service';
@@ -13,6 +16,7 @@ export class AuthService {
 
   constructor(
     private afAuth: AngularFireAuth,
+    private afStorage: AngularFireStorage,
     private userService: UserService
   ) {
     this.init();
@@ -105,6 +109,30 @@ export class AuthService {
     }
 
     await this.afAuth.auth.sendPasswordResetEmail(this.currentAuthUser.email);
+  }
+
+  /**
+   * Returns photoUrl
+   * @param fileDataUrl
+   */
+  uploadAuthPhoto(fileDataUrl: string): Promise<string> {
+    const filePath = `image/dp/household_${this.currentAuthUser.uid}`;
+    const fileRef = this.afStorage.ref(filePath);
+    const task = fileRef.putString(fileDataUrl, 'data_url');
+
+    return new Promise((resolve, reject) => {
+      try {
+        task.snapshotChanges().pipe(
+          finalize(async () => {
+            const photoUrl = await fileRef.getDownloadURL().toPromise();
+            await this.updatePhotoUrl(photoUrl);
+            resolve(photoUrl);
+          })
+        ).subscribe();
+      } catch (error) {
+        reject(error);
+      }
+    })
   }
 
   signOut(): void {
