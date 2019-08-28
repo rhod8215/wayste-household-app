@@ -1,0 +1,39 @@
+<ion-toolbar>
+  <ion-buttons slot="start">
+    <ion-button (click)="dismiss()">
+      <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+  <ion-buttons slot="primary">
+    <ion-button (click)="viewMap()">
+      View Map
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+
+<ion-content padding>
+  <!-- (ionChange)="searchNow()" -->
+  <!-- <ion-searchbar
+    searchIcon="pin"
+    [formControl]="searchControl"
+    (ionChange)="onSearchInput()"
+    placeholder="Enter pick-up location"></ion-searchbar> -->
+
+  <!-- select location via geolocation -->
+
+  <ion-list>
+    <ion-item (click)="useCurrentLocation()">
+      <ion-icon name="locate" slot="start"></ion-icon>
+      <ion-label>
+        <ion-text>
+          <strong>Use Current Location</strong>
+        </ion-text>
+        <ion-text>
+          <p>address</p>
+        </ion-text>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <!-- show list here -->
+</ion-content>

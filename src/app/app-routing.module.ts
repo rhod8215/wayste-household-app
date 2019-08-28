@@ -19,6 +19,10 @@ const routes: Routes = [
     path: 'account',
     loadChildren: './account/account.module#AccountPageModule'
   },
+  {
+    path: 'request-disposal',
+    loadChildren: './request-disposal/request-disposal.module#RequestDisposalPageModule'
+  },
 ];
 
 @NgModule({

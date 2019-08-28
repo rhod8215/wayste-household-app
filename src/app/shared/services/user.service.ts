@@ -29,7 +29,6 @@ export class UserService {
 
     return {
       name: docSnapshot.get('name'),
-      photoUrl: docSnapshot.get('photoUrl'),
       email: docSnapshot.get('email'),
       contactNumber: docSnapshot.get('contactNumber'),
       address: docSnapshot.get('address'),
@@ -40,7 +39,12 @@ export class UserService {
     if (!currentAuthUser) {
       this.currentUser = null;
     } else {
-      this.currentUser = await this.getUserById(currentAuthUser.uid);
+      const user = await this.getUserById(currentAuthUser.uid);
+      this.currentUser = {
+        id: currentAuthUser.uid,
+        photoUrl: currentAuthUser.photoURL,
+        ...user
+      };
     }
     this.currentUser$.next(this.currentUser);
   }

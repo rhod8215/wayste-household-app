@@ -22,6 +22,8 @@ coverage/
 www/
 dist/
 node_modules/
+resources/android/
+resources/ios/
 tmp/
 temp/
 platforms/

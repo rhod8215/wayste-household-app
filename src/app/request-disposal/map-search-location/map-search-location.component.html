@@ -1,0 +1,33 @@
+<ion-toolbar>
+  <ion-label text-wrap>
+    {{ pinnedLocationDetails?.name }}
+  </ion-label>
+  <ion-buttons slot="start">
+    <ion-button (click)="dismiss()">
+      <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+  <ion-buttons slot="primary">
+    <ion-button (click)="confirm()">
+      Confirm
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+
+<ion-content>
+  <ng-container>
+    <agm-map
+        (mapReady)="mapReady($event)"
+        [streetViewControl]="false"
+        [zoom]="20"
+        [latitude]="pinnedLocationDetails?.coords.lat"
+        [longitude]="pinnedLocationDetails?.coords.lng">
+      <agm-marker
+          (dragEnd)="markerUpdated($event)"
+          [markerDraggable]="true"
+          [iconUrl]="householdPin"
+          [latitude]="pinnedLocationDetails?.coords.lat"
+          [longitude]="pinnedLocationDetails?.coords.lng"></agm-marker>
+    </agm-map>
+  </ng-container>
+</ion-content>
