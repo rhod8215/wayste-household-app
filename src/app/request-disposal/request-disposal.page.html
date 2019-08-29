@@ -64,5 +64,6 @@
     </div>
   </ion-list>
 
-  <ion-button [disabled]="!canRequestDisposal" (click)="requestDisposal()" >Book Eco-aide</ion-button>
+  <ion-button [disabled]="!canRequestDisposal || processing"
+    (click)="requestDisposal()" >Book Eco-aide</ion-button>
 </ion-content>

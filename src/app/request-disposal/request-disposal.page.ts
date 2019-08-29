@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController, AlertController } from '@ionic/angular';
 import { MapSearchLocationComponent } from './map-search-location/map-search-location.component';
 import { UserService } from '@shared/services/user.service';
 import { DisposalService } from '@shared/services/disposal.service';
@@ -23,8 +23,12 @@ export class RequestDisposalPage implements OnInit {
   trashPhotoList: Array<any>;
   IMAGE_LIST_MAX_LENGTH = 3;
 
+  processing: boolean = false;
+
   constructor(
+    private alertCtrl: AlertController,
     private modalCtrl: ModalController,
+    private toastCtrl: ToastController,
     private disposalService: DisposalService,
     private userService: UserService,
   ) { }
@@ -63,11 +67,50 @@ export class RequestDisposalPage implements OnInit {
   async requestDisposal() {
     const household: User = this.userService.currentUser;
     const householdLoc: Location = this.pickUpLocation;
+    let processingToast;
 
-    this.disposalService.requestDisposal(
-      household,
-      householdLoc
-    );
+    try {
+      this.processing = true;
+
+      processingToast = await this.toastCtrl.create({
+        message: 'Processing disposal request...'
+      });
+      processingToast.present();
+
+      const disposalId = await this.disposalService.createDisposal(
+        household,
+        householdLoc
+      );
+
+      const photoUrlList = await this.disposalService.saveDisposalImages(disposalId, this.trashPhotoList);
+      await this.disposalService.updateDisposalWithPhotoUrls(disposalId, photoUrlList);
+    } catch (error) {
+      const errorAlert = await this.alertCtrl.create({
+        header: 'Error',
+        message: error.message || 'Unable to process request. Please try again later.',
+        buttons: ['Okay'],
+      });
+      await errorAlert.present();
+    } finally {
+      this.processing = false;
+      processingToast.dismiss();
+    }
+  }
+
+  async _presentAlerPromptOnError(
+    error: { code?: string, message: string },
+    callback?
+  ) {
+    const errorAlert = await this.alertCtrl.create({
+      header: 'Alert',
+      message: error.message,
+      buttons: ['Okay'],
+    });
+    await errorAlert.present();
+    if (callback) {
+      errorAlert.onDidDismiss()
+        .finally(callback);
+    }
   }
 
   get canRequestDisposal(): boolean {
