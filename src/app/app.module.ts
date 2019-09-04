@@ -7,9 +7,8 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
-
-import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { Facebook } from '@ionic-native/facebook/ngx';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -17,9 +16,13 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule, StorageBucket } from '@angular/fire/storage';
 import { AgmCoreModule } from '@agm/core';
 import { AngularCropperjsModule } from 'angular-cropperjs';
-import { firebaseConfig, googleAPIKey } from '@env/config';
 
+import { firebaseConfig, googleAPIKey } from '@env/config';
 import { LocationService } from '@shared/services/location.service';
+
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -44,6 +47,8 @@ import { LocationService } from '@shared/services/location.service';
     Geolocation,
     LocationService,
     Camera,
+    GooglePlus,
+    Facebook,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: StorageBucket, useValue: firebaseConfig.storageBucket },
   ],

@@ -1,13 +1,14 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { ModalController, Platform } from '@ionic/angular';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { ModalController, Platform, ActionSheetController } from '@ionic/angular';
+import { CameraOptions, Camera } from '@ionic-native/camera/ngx';
 
 import { Subscription } from 'rxjs';
 
 import { AuthService } from '@shared/services/auth.service';
 import { UserService } from '@shared/services/user.service';
 
-import { UpdateProfileInfoComponent } from './update-profile-info/update-profile-info.component';
 import { PhotoCropperComponent } from './photo-cropper/photo-cropper.component';
+import { User } from '@shared/models/user';
 
 @Component({
   selector: 'app-account',
@@ -16,13 +17,15 @@ import { PhotoCropperComponent } from './photo-cropper/photo-cropper.component';
 })
 export class AccountPage implements OnInit, OnDestroy {
 
-  appUserInfo: any; // TO DO: AppUser model
+  appUserInfo: User;
   isAccountLoaded: any;
   subscription: Subscription;
 
   constructor(
+    private actionSheetCtrl: ActionSheetController,
     private modalCtrl: ModalController,
     private auth: AuthService,
+    private camera: Camera,
     private userService: UserService,
     private changeRef: ChangeDetectorRef,
     private platform: Platform,
@@ -33,11 +36,11 @@ export class AccountPage implements OnInit, OnDestroy {
     this.subscription = this.userService.currentUser$.subscribe(user => {
       if (!!user) {
         this.appUserInfo = {
-          userId: this.auth.currentAuthUser.uid,
-          fullName: this.auth.currentAuthUser.displayName ?
+          id: this.auth.currentAuthUser.uid,
+          name: this.auth.currentAuthUser.displayName ?
             this.auth.currentAuthUser.displayName : '(Please update profile info)',
-          email: this.userService.currentUser.email ?
-            this.userService.currentUser.email : '',
+          email: this.auth.currentAuthUser.email ?
+            this.auth.currentAuthUser.email : '',
           contactNumber: this.userService.currentUser.contactNumber ?
             this.userService.currentUser.contactNumber : '',
           address: this.userService.currentUser.address ?
@@ -92,40 +95,38 @@ export class AccountPage implements OnInit, OnDestroy {
   }
 
   async onCordovaUpload() {
-    // const cameraOptions: CameraOptions = {
-    //   quality: 100,
-    //   destinationType: this.camera.DestinationType.DATA_URL,
-    //   encodingType: this.camera.EncodingType.JPEG,
-    //   mediaType: this.camera.MediaType.PICTURE,
-    // };
+    const cameraOptions: CameraOptions = {
+      quality: 100,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE,
+    };
 
-    // const actionSheet = await this.actionSheetCtrl.create({
-    //   buttons: [
-    //     {
-    //       text: 'Camera',
-    //       icon: 'camera',
-    //       handler: () => {
-    //         cameraOptions.sourceType = this.camera.PictureSourceType.CAMERA;
-    //       }
-    //     }, {
-    //       text: 'Photo Album',
-    //       icon: 'photos',
-    //       handler: () => {
-    //         cameraOptions.sourceType = this.camera.PictureSourceType.PHOTOLIBRARY;
-    //       }
-    //     }
-    //   ]
-    // });
+    const actionSheet = await this.actionSheetCtrl.create({
+      buttons: [
+        {
+          text: 'Camera',
+          icon: 'camera',
+          handler: () => {
+            cameraOptions.sourceType = this.camera.PictureSourceType.CAMERA;
+          }
+        }, {
+          text: 'Photo Album',
+          icon: 'photos',
+          handler: () => {
+            cameraOptions.sourceType = this.camera.PictureSourceType.PHOTOLIBRARY;
+          }
+        }
+      ]
+    });
 
-    // await actionSheet.present();
-    // await actionSheet.onDidDismiss();
+    await actionSheet.present();
+    await actionSheet.onDidDismiss();
 
-    // if (typeof cameraOptions.sourceType !== undefined) {
-    //   const imageURI = await this.camera.getPicture(cameraOptions);
-    //   this.imageFileArray.push(
-    //     this.formBuilder.control(`data:image/jpeg;base64,${imageURI}`)
-    //   );
-    // }
+    if (typeof cameraOptions.sourceType !== undefined) {
+      const imageURI = await this.camera.getPicture(cameraOptions);
+      this.openPhotoCropper(imageURI, 'image/jpg');
+    }
   }
 
   /**
@@ -141,30 +142,5 @@ export class AccountPage implements OnInit, OnDestroy {
     } else {
       imageFileInput.click();
     }
-  }
-
-  async openEditAccountModal() {
-    const modal = await this.modalCtrl.create({
-      component: UpdateProfileInfoComponent,
-      componentProps: {
-        fullName: this.appUserInfo.fullName,
-        email: this.appUserInfo.email,
-        contactNumber: this.appUserInfo.contactNumber,
-        address: this.appUserInfo.address,
-      },
-    });
-
-    modal.onDidDismiss()
-      .then((returnedData) => {
-        if (returnedData.data) {
-          this.appUserInfo = {
-            fullName: returnedData.data.fullName,
-            email: returnedData.data.email,
-            contactNumber: returnedData.data.contactNumber,
-            address: returnedData.data.address
-          };
-        }
-      });
-    return await modal.present();
   }
 }

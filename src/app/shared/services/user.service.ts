@@ -53,16 +53,26 @@ export class UserService {
     userId: string,
     name: string,
     email: string,
+    address?: string,
   ) {
     const userExists = await this.getUserById(userId);
     if (!!userExists) {
       throw new Error(`UserID: "${userId}" already exists!`);
     }
 
-    return await this.userRef.doc(userId).set({
+    let userInfo: User = {
       name,
       email,
-    });
+    };
+
+    if (address) {
+      userInfo = {
+        ...userInfo,
+        address
+      };
+    }
+
+    return await this.userRef.doc(userId).set(userInfo);
   }
 
   async updateUser(
@@ -71,10 +81,20 @@ export class UserService {
     contactNumber: string,
     address: string
   ) {
-    await this.userRef.doc(userId).update({
-      name,
-      contactNumber,
-      address
-    });
+    const userExists = await this.getUserById(userId);
+    if (!userExists) {
+      await this.createUser(
+        userId,
+        name,
+        contactNumber,
+        address
+      );
+    } else {
+      await this.userRef.doc(userId).update({
+        name,
+        contactNumber,
+        address
+      });
+    }
   }
 }

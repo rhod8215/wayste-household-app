@@ -6,6 +6,10 @@ import { finalize } from 'rxjs/operators';
 import { auth } from 'firebase/app';
 import { BehaviorSubject } from 'rxjs';
 import { UserService } from './user.service';
+import { Platform } from '@ionic/angular';
+import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { googleOAuthWebClientId } from '@env/config';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +21,9 @@ export class AuthService {
   constructor(
     private afAuth: AngularFireAuth,
     private afStorage: AngularFireStorage,
+    private facebook: Facebook,
+    private googlePlus: GooglePlus,
+    private platform: Platform,
     private userService: UserService
   ) {
     this.init();
@@ -64,15 +71,55 @@ export class AuthService {
   }
 
   async authViaGoogle() {
-    const provider = new auth.GoogleAuthProvider();
-    provider.addScope('profile');
-    provider.addScope('email');
-    await this.afAuth.auth.signInWithRedirect(provider);
+    try {
+      if (this.platform.is('cordova')) {
+        const googlePlusUser = await this.googlePlus.login({
+          webClientId: googleOAuthWebClientId,
+          offline: true,
+          scopes: 'profile email',
+        });
+
+        const googleCredential = auth.GoogleAuthProvider.credential(googlePlusUser.idToken);
+        const firebaseUser = await this.afAuth.auth.signInWithCredential(googleCredential)
+        return firebaseUser;
+      } else {
+        const provider = new auth.GoogleAuthProvider();
+        provider.addScope('profile');
+        provider.addScope('email');
+        return await this.afAuth.auth.signInWithRedirect(provider);
+      }
+    } catch (error) {
+      alert(error.toString());
+      alert(JSON.stringify(error));
+      // Ignore if user just cancelled dialog
+      if (error.toString() == 12501) {
+        throw {code: 12501};
+      }
+      throw error;
+    }
   }
 
   async authViaFB() {
-    const provider = new auth.FacebookAuthProvider();
-    await this.afAuth.auth.signInWithRedirect(provider);
+    try {
+      if (this.platform.is('cordova')) {
+        const response: FacebookLoginResponse = await this.facebook.login(['public_profile', 'email']);
+        const facebookCredential = auth.FacebookAuthProvider.credential(response.authResponse.accessToken);
+        const success = await this.afAuth.auth.signInWithCredential(facebookCredential)
+        alert("Firebase success: " + JSON.stringify(success));
+      } else {
+        const provider = new auth.FacebookAuthProvider();
+        await this.afAuth.auth.signInWithRedirect(provider);
+      }
+    } catch (error) {
+
+      alert(error.toString());
+      alert(JSON.stringify(error));
+      // Ignore if user just cancelled dialog
+      if (error.errorCode == 4201) {
+        throw { code: 4201 };
+      }
+      throw error;
+    }
   }
 
   async updateName(

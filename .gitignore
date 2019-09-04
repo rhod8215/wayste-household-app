@@ -22,8 +22,10 @@ coverage/
 www/
 dist/
 node_modules/
-resources/android/
-resources/ios/
+resources/android/icon/
+resources/android/splash/
+resources/ios/icon/
+resources/ios/splash/
 tmp/
 temp/
 platforms/

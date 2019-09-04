@@ -14,7 +14,8 @@ export class LocationService {
   ) { }
 
   async getCurrentLocation(): Promise<Coords> {
-    const { coords } = await this.geolocation.getCurrentPosition();
+    const { coords } = await this.geolocation
+      .getCurrentPosition({ enableHighAccuracy: true });
     return {
       lat: coords.latitude,
       lng: coords.longitude

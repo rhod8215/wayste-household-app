@@ -9,61 +9,70 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding class="AppPageContent">
 
   <!-- Select location -->
-  <ion-list lines="none">
-    <ion-list-header>
-      <ion-label>1. Select pick-up location</ion-label>
-    </ion-list-header>
-    <ion-item (click)="openMapSearchLocationModal()">
-      <ion-icon name="pin" slot="start"></ion-icon>
-      <ion-label *ngIf="!pickUpLocation">
-        <ion-text>
-          Select location
-        </ion-text>
-      </ion-label>
-      <ion-label *ngIf="pickUpLocation">
-        <ion-text>
-          <strong>{{ pickUpLocation.name }}</strong>
-        </ion-text>
-        <ion-text text-wrap>
-          <p>{{ pickUpLocation.address }}</p>
-        </ion-text>
-      </ion-label>
-    </ion-item>
-  </ion-list>
-
+  <ion-card>
+    <ion-list lines="none">
+      <ion-list-header>
+        <h6>1. Select pick-up location</h6>
+      </ion-list-header>
+      <ion-item ion-button (click)="openMapSearchLocationModal()">
+        <ion-icon padding
+            name="pin"
+            slot="start"
+            [color]="pickUpLocation ? 'success' : 'danger'"></ion-icon>
+        <ion-label *ngIf="!pickUpLocation">
+          <ion-text>
+            Select location
+          </ion-text>
+        </ion-label>
+        <ion-label *ngIf="pickUpLocation">
+          <ion-text>
+            <strong>{{ pickUpLocation.name }}</strong>
+          </ion-text>
+          <ion-text text-wrap>
+            <p>{{ pickUpLocation.address }}</p>
+          </ion-text>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-card>
 
   <!-- Select trash type -->
-  <ion-list lines="none">
-    <ion-list-header>
-      <ion-label>2. Select Trash Type</ion-label>
-    </ion-list-header>
-    <ion-item *ngFor="let trashType of trashTypeList">
-      <ion-label>{{ trashType.name }}</ion-label>
-      <ion-checkbox
-        slot="start"
-        disabled="trashType.disabled"
-        [(ngModel)]="trashType.isChecked"></ion-checkbox>
-    </ion-item>
-  </ion-list>
+  <ion-card>
+    <ion-list lines="none">
+      <ion-list-header>
+        <h6>2. Select Trash Type</h6>
+      </ion-list-header>
+      <ion-item *ngFor="let trashType of trashTypeList">
+        <ion-label>{{ trashType.name }}</ion-label>
+        <ion-checkbox
+          slot="start"
+          disabled="trashType.disabled"
+          [(ngModel)]="trashType.isChecked"></ion-checkbox>
+      </ion-item>
+    </ion-list>
+  </ion-card>
 
   <!-- Photos -->
-  <ion-list lines="none">
-    <ion-list-header>
-      <ion-label>3. Take photos (max 3)</ion-label>
-    </ion-list-header>
-    <ion-item *ngFor="let trashPhoto of trashPhotoList">
-      <ion-thumbnail>
-        <img [src]="trashPhoto" alt="" />
-      </ion-thumbnail>
-    </ion-item>
-    <div *ngIf="canStillAddImage()">
-      <app-take-photos [(trashPhotoList)]="trashPhotoList"></app-take-photos>
-    </div>
-  </ion-list>
+  <ion-card>
+    <ion-list lines="none">
+      <ion-list-header>
+        <h6>3. Take photos (max 3)</h6>
+      </ion-list-header>
+      <ion-item padding *ngFor="let trashPhoto of trashPhotoList">
+        <img max-width="42" [src]="trashPhoto" alt="" />
+      </ion-item>
+      <div *ngIf="canStillAddImage()">
+        <app-take-photos [(trashPhotoList)]="trashPhotoList"></app-take-photos>
+      </div>
+    </ion-list>
+  </ion-card>
 
-  <ion-button [disabled]="!canRequestDisposal || processing"
-    (click)="requestDisposal()" >Book Eco-aide</ion-button>
+  <ion-button
+      padding
+      expand="block"
+      [disabled]="!canRequestDisposal || processing"
+      (click)="requestDisposal()" >Book Eco-aide</ion-button>
 </ion-content>

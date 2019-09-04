@@ -1,9 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ModalController } from '@ionic/angular';
 
 import { AuthService } from '@shared/services/auth.service';
 import { UserService } from '@shared/services/user.service';
+import { User } from '@shared/models/user';
 
 @Component({
   selector: 'app-update-profile-info',
@@ -12,51 +12,85 @@ import { UserService } from '@shared/services/user.service';
 })
 export class UpdateProfileInfoComponent implements OnInit {
 
-  @Input() fullName: string;
-  @Input() email: string;
-  @Input() contactNumber: string;
-  @Input() address: string;
+  @Input() appUserInfo: User;
+  @Output() appUserInfoChange = new EventEmitter<any>();
 
   updateInfoForm: FormGroup;
-  error;
+  savingInfo: boolean = false;
+  onEdit: boolean = false;
+  error: any;
 
   constructor(
     private auth: AuthService,
     private formBuilder: FormBuilder,
-    private modalCtrl: ModalController,
     private userService: UserService,
+    private changeRef: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
+    this.initForm();
+  }
+
+  initForm() {
     this.updateInfoForm = this.formBuilder.group({
-      fullName: [this.fullName, Validators.required],
-      email: [{value: this.email, disabled: true}],
-      contactNumber: [this.contactNumber],
-      address: [this.address],
+      name: [this.appUserInfo.name, Validators.required],
+      email: [{value: this.appUserInfo.email, disabled: true}],
+      contactNumber: [this.appUserInfo.contactNumber],
+      address: [this.appUserInfo.address],
     });
   }
 
   async saveChanges() {
     try {
-      await this.auth.updateName(this.updateInfoForm.value.fullName);
+      this.savingInfo = true;
+      this.changeRef.detectChanges();
+
+      await this.auth.updateName(this.updateInfoForm.value.name);
       await this.userService.updateUser(
         this.auth.currentAuthUser.uid,
-        this.updateInfoForm.value.fullName,
+        this.updateInfoForm.value.name,
         this.updateInfoForm.value.contactNumber,
         this.updateInfoForm.value.address,
       );
 
-      this.modalCtrl.dismiss({
-        fullName: this.updateInfoForm.value.fullName,
-        email: this.updateInfoForm.value.email,
-        contactNumber: this.updateInfoForm.value.contactNumber
-      });
+      this.setProfileInfo(
+        this.updateInfoForm.value.name,
+        this.updateInfoForm.value.contactNumber,
+        this.updateInfoForm.value.address,
+      );
+
+      this.appUserInfoChange.emit(this.appUserInfo);
+      this.onEdit = false;
     } catch (error) {
       this.error = error;
+    } finally {
+      this.savingInfo = false;
+      this.changeRef.detectChanges();
     }
   }
 
-  closeModal() {
-    this.modalCtrl.dismiss();
+  cancel() {
+    this.initForm();
+    this.onEdit = false;
+    this.error = null;
+    this.changeRef.detectChanges();
+  }
+
+  enableEdit() {
+    this.onEdit = true;
+    this.changeRef.detectChanges();
+  }
+
+  setProfileInfo(
+    name: string,
+    contactNumber: string,
+    address: string,
+  ) {
+    this.appUserInfo = {
+      ...this.appUserInfo,
+      name,
+      contactNumber,
+      address,
+    }
   }
 }

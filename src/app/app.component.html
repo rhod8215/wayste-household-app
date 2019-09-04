@@ -2,9 +2,9 @@
   <ion-split-pane>
     <ion-menu *ngIf="isLoggedIn">
       <ion-header>
-        <ion-toolbar color="primary">
+        <ion-toolbar>
           <ion-title class="App-menu-title">
-            <ion-item lines="none" color="primary">
+            <ion-item lines="none">
               <ion-label>
                 Wayste
               </ion-label>
@@ -12,8 +12,8 @@
           </ion-title>
         </ion-toolbar>
       </ion-header>
-      <ion-content>
-        <ion-list>
+      <ion-content class="AppPageContent">
+        <ion-list class="AppMenu-list">
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
             <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
               <ion-icon slot="start" [name]="p.icon"></ion-icon>

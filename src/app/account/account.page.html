@@ -3,19 +3,15 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-buttons slot="primary">
-      <ion-button (click)="openEditAccountModal()">
-        Edit
-      </ion-button>
-    </ion-buttons>
     <ion-title>
       Account
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding class="AppPageContent">
   <ng-container *ngIf="isAccountLoaded; else loadingAccount">
+    <!-- PROFILE PHOTO -->
     <div class="AccountPage-avatar-container">
       <img class="AccountPage-avatar"
           [src]="appUserInfo?.photoUrl || 'assets/img/dp_paui.png'" alt=""/>
@@ -25,37 +21,25 @@
           #imageFileInput
           hidden />
     </div>
-
     <ion-button
         expand="block"
-        (click)="openFileDialog(imageFileInput)">Change Profile Picture</ion-button>
+        padding
+        (click)="openFileDialog(imageFileInput)">
+      Change Profile Picture
+    </ion-button>
 
-    <h4>Personal Information</h4>
-    <ion-card>
-      <ion-item lines="full" text-wrap>
-        <ion-label position="stacked">Name</ion-label>
-        <ion-input type="text" readonly>{{ appUserInfo?.fullName }}</ion-input>
-      </ion-item>
-      <ion-item lines="full" text-wrap>
-        <ion-label position="stacked">E-mail</ion-label>
-        <ion-input type="email" readonly>{{ appUserInfo?.email }}</ion-input>
-      </ion-item>
-      <ion-item lines="full" text-wrap>
-        <ion-label position="stacked">Contact Number</ion-label>
-        <ion-input type="number" readonly>{{ appUserInfo?.contactNumber }}</ion-input>
-      </ion-item>
-      <ion-item lines="full" text-wrap>
-        <ion-label position="stacked">Address</ion-label>
-        <ion-input type="text" readonly>{{ appUserInfo?.address }}</ion-input>
-      </ion-item>
-    </ion-card>
+    <!-- PROFILE INFO -->
+    <app-update-profile-info [(appUserInfo)]="appUserInfo"></app-update-profile-info>
 
+    <!-- TO DO: Function to change password -->
+    <!--
     <h4>Password</h4>
     <div>
       <ion-button expand="block">
         Change password
       </ion-button>
     </div>
+     -->
   </ng-container>
 
   <ng-template #loadingAccount>

@@ -27,7 +27,6 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   entryComponents: [
-    UpdateProfileInfoComponent,
     PhotoCropperComponent,
   ],
   declarations: [

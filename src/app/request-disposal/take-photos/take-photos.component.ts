@@ -40,6 +40,7 @@ export class TakePhotosComponent implements OnInit {
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,
+      correctOrientation: true,
     };
 
     const actionSheet = await this.actionSheetCtrl.create({
