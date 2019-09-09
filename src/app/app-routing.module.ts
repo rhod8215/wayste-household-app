@@ -17,11 +17,15 @@ const routes: Routes = [
   },
   {
     path: 'account',
-    loadChildren: './account/account.module#AccountPageModule'
+    loadChildren: () => import('./account/account.module').then(m => m.AccountPageModule)
   },
   {
     path: 'request-disposal',
-    loadChildren: './request-disposal/request-disposal.module#RequestDisposalPageModule'
+    loadChildren: () => import('./request-disposal/request-disposal.module').then(m => m.RequestDisposalPageModule)
+  },
+  {
+    path: 'track-collector',
+    loadChildren: () => import('./track-collector/track-collector.module').then(m => m.TrackCollectorPageModule)
   },
 ];
 

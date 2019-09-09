@@ -1,0 +1,27 @@
+ion-content {
+  position: relative;
+  overflow: hidden;
+}
+
+agm-map {
+  height: 100%;
+}
+
+.TrackCollector {
+  width: 100%;
+  padding: 16px;
+  position: absolute;
+  // bottom: -210px;
+  bottom: 0;
+  z-index: 11;
+  overflow: hidden;
+}
+
+.TrackCollector ion-card {
+  --background: white;
+}
+
+.TrackCollector-icon-button {
+  margin-left: 16px;
+  margin-right: 0;
+}

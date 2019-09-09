@@ -1,6 +1,5 @@
 import { Component, AfterContentInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { MapsAPILoader } from '@agm/core';
 import { LocationService } from '@shared/services/location.service';
 import { Location } from '@shared/models/location';
 
@@ -26,7 +25,6 @@ export class MapSearchLocationComponent implements AfterContentInit {
 
   constructor(
     private modalCtrl: ModalController,
-    private mapsApiLoader: MapsAPILoader,
     public locationService: LocationService
   ) { }
 
@@ -35,7 +33,6 @@ export class MapSearchLocationComponent implements AfterContentInit {
   }
 
   async initLocation() {
-    await this.mapsApiLoader.load();
     const { lat, lng } = await this.locationService.getCurrentLocation();
     await this.selectLocation(lat, lng);
   }

@@ -9,3 +9,9 @@ export interface Location {
   address: string;
   coords: Coords;
 }
+
+export interface RTDBLoc {
+  key: string;
+  location: Array<number>;
+  distance: number;
+}

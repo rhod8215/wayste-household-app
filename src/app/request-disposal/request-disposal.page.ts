@@ -5,6 +5,8 @@ import { UserService } from '@shared/services/user.service';
 import { DisposalService } from '@shared/services/disposal.service';
 import { User } from '@shared/models/user';
 import { Location } from '@shared/models/location';
+import { LocationService } from '@shared/services/location.service';
+import { Router } from '@angular/router';
 
 interface TrashType {
   name: string,
@@ -31,6 +33,8 @@ export class RequestDisposalPage implements OnInit {
     private toastCtrl: ToastController,
     private disposalService: DisposalService,
     private userService: UserService,
+    private locationService: LocationService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -66,7 +70,7 @@ export class RequestDisposalPage implements OnInit {
 
   async requestDisposal() {
     const household: User = this.userService.currentUser;
-    const householdLoc: Location = this.pickUpLocation;
+    const disposalLoc: Location = this.pickUpLocation;
     let processingToast;
 
     try {
@@ -79,11 +83,19 @@ export class RequestDisposalPage implements OnInit {
 
       const disposalId = await this.disposalService.createDisposal(
         household,
-        householdLoc
+        disposalLoc
       );
+
+      await this.disposalService.addHouseholdToPending(
+        household.id,
+        disposalId,
+        disposalLoc.coords);
+      await this.locationService.addDisposalLocation(disposalId, disposalLoc.coords);
 
       const photoUrlList = await this.disposalService.saveDisposalImages(disposalId, this.trashPhotoList);
       await this.disposalService.updateDisposalWithPhotoUrls(disposalId, photoUrlList);
+
+      this.router.navigate(['track-collector']);
     } catch (error) {
       const errorAlert = await this.alertCtrl.create({
         header: 'Error',

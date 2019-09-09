@@ -22,6 +22,7 @@
     "@angular/platform-browser": "~8.1.2",
     "@angular/platform-browser-dynamic": "~8.1.2",
     "@angular/router": "~8.1.2",
+    "@ionic-native/call-number": "^5.0.0-beta.14",
     "@ionic-native/camera": "^5.12.0",
     "@ionic-native/core": "^5.0.0",
     "@ionic-native/facebook": "^5.13.0",
@@ -31,6 +32,7 @@
     "@ionic-native/status-bar": "^5.0.0",
     "@ionic/angular": "^4.7.1",
     "angular-cropperjs": "^1.0.1",
+    "call-number": "1.0.1",
     "cordova-android": "^8.0.0",
     "cordova-plugin-browsertab": "0.2.0",
     "cordova-plugin-buildinfo": "3.0.1",
@@ -43,7 +45,8 @@
     "cordova-universal-links-plugin-fix": "1.2.1",
     "core-js": "^2.5.4",
     "cropperjs": "^1.5.5",
-    "firebase": "^6.3.5",
+    "firebase": "^6.5.0",
+    "geofire": "^5.0.1",
     "moment": "^2.24.0",
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",
@@ -102,7 +105,8 @@
       "cordova-plugin-buildinfo": {},
       "cordova-universal-links-plugin": {},
       "cordova-plugin-browsertab": {},
-      "cordova-plugin-inappbrowser": {}
+      "cordova-plugin-inappbrowser": {},
+      "mx.ferreyra.callnumber": {}
     },
     "platforms": [
       "android"

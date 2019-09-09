@@ -1,14 +1,14 @@
-import { User } from './user';
+import { User, Collector } from './user';
 import { Coords, Location } from './location';
 
 export interface Disposal {
   id?: string;
   household: User;
-  ecoAide?: User;
-  householdLoc: Location;
+  collector?: Collector;
+  disposalLoc: Location;
   ecoAideOrigLoc?: Coords;
-  coordsTracked?: Coords; // coordinates to track distance
-  timeRequested: string|Date;
+  collectorCoords?: Coords; // coordinates to track distance
+  timeRequested?: string|Date; //required supposedly
   timeAccepted?: string|Date;
   timeCompleted?: string|Date;
   cancelled?: {
@@ -16,4 +16,5 @@ export interface Disposal {
     reason?: string;
     time: string;
   };
+  photoUrlList?: Array<String>; // required supposedly
 }

@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-row>
+      <ion-button fill="clear" size="large" (click)="closeModal()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+      <ion-item>
+        <ion-avatar slot="start">
+          <ion-img src="{{ collector.photoUrl }}"></ion-img>
+        </ion-avatar>
+        <ion-label>
+          <h6>{{ collector.name }}</h6>
+          <p>{{ collector.plateNumber || 'unavailable' }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-row *ngFor="let chatMsg of chatMessages">
+    <ion-col no-padding
+        [offset]="chatMsg.sender==='collector' ? '0' : '2'">
+      <ion-card
+          padding
+          class="Chat-box"
+          [color]="chatMsg.sender==='collector' ? '' : 'primary'">
+        {{ chatMsg.message }}
+      </ion-card>
+    </ion-col>
+    <ion-col
+        no-padding
+        [size]="chatMsg.sender==='collector' ? '3' : '0'"></ion-col>
+  </ion-row>
+</ion-content>
+
+<ion-footer>
+  <ion-item>
+    <ion-row>
+      <ion-textarea
+          placeholder="Enter Message here"
+          rows="4"
+          cols="110"
+          autofocus="true"
+          [(ngModel)]="msg"></ion-textarea>
+      <ion-button fill="clear" size="large" (click)="sendMessage()">
+        <ion-icon name="send"></ion-icon>
+      </ion-button>
+    </ion-row>
+  </ion-item>
+</ion-footer>

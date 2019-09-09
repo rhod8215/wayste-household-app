@@ -14,7 +14,6 @@ import { MapSearchLocationComponent } from './map-search-location/map-search-loc
 const routes: Routes = [
   {
     path: '',
-
     component: RequestDisposalPage
   }
 ];

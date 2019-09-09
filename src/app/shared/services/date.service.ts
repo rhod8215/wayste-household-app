@@ -15,4 +15,8 @@ export class DateService {
   getFormattedDateNow(): string {
     return moment().format('DDMMMYYYY');
   }
+
+  stringToDate(dateString: string): Date {
+    return new Date(dateString);
+  }
 }

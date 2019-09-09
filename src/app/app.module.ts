@@ -9,9 +9,11 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { Facebook } from '@ionic-native/facebook/ngx';
+import { CallNumber } from '@ionic-native/call-number/ngx';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule, StorageBucket } from '@angular/fire/storage';
 import { AgmCoreModule } from '@agm/core';
@@ -33,12 +35,13 @@ import { AppRoutingModule } from './app-routing.module';
     AppRoutingModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireAuthModule,
+    AngularFireDatabaseModule,
     AngularFirestoreModule,
     AngularFireStorageModule,
     AngularCropperjsModule,
     AgmCoreModule.forRoot({
       apiKey: googleAPIKey,
-      libraries: ['places']
+      libraries: ['places', 'directions']
     })
   ],
   providers: [
@@ -49,6 +52,7 @@ import { AppRoutingModule } from './app-routing.module';
     Camera,
     GooglePlus,
     Facebook,
+    CallNumber,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: StorageBucket, useValue: firebaseConfig.storageBucket },
   ],
