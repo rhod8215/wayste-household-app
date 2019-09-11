@@ -149,7 +149,8 @@ export class TrackCollectorPage implements OnInit, OnDestroy {
     const modal = await this.modalCtrl.create({
       component: ChatComponent,
       componentProps: {
-        collector: this.collector
+        collector: this.collector,
+        disposalId: this.ongoingDisposal.id,
       }
     });
 
