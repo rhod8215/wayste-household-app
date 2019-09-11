@@ -4,7 +4,7 @@
       <ion-button fill="clear" size="large" (click)="closeModal()">
         <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
-      <ion-item>
+      <ion-item lines="none">
         <ion-avatar slot="start">
           <ion-img src="{{ collector.photoUrl }}"></ion-img>
         </ion-avatar>
@@ -43,7 +43,11 @@
           cols="110"
           autofocus="true"
           [(ngModel)]="msg"></ion-textarea>
-      <ion-button fill="clear" size="large" (click)="sendMessage()">
+      <ion-button
+          fill="clear"
+          size="large"
+          [disabled]="sending"
+          (click)="sendMessage()">
         <ion-icon name="send"></ion-icon>
       </ion-button>
     </ion-row>

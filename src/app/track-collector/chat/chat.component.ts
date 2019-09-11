@@ -1,12 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
+import { ChatService } from '@shared/services/chat.service';
+import { ChatMessage } from '@shared/models/chat';
 import { Collector } from '@shared/models/user';
+import { Subscription } from 'rxjs';
 
-interface ChatMessage {
-  sender: string;
-  message: string;
-}
 
 @Component({
   selector: 'app-chat',
@@ -16,48 +15,42 @@ interface ChatMessage {
 export class ChatComponent implements OnInit {
 
   msg: string;
+  sending: boolean = false;
+  @Input() disposalId: string;
   @Input() collector: Collector;
-  // @Input() chatMessages: ChatMessage[];
+
   chatMessages: ChatMessage[];
 
-  constructor(private modalCtrl: ModalController) { }
+  chatSub: Subscription;
+
+  constructor(
+    private modalCtrl: ModalController,
+    private chatService: ChatService,
+  ) { }
 
   ngOnInit() {
-    this.chatMessages = DUMMY_CHAT_MESSAGES;
+    this.chatSub = this.chatService.getMessages(this.disposalId)
+      .subscribe((messages: ChatMessage[]) =>
+        this.chatMessages = [...messages]
+      );
+  }
+
+  ngOnDestroy() {
+    this.chatSub.unsubscribe();
   }
 
   closeModal() {
     this.modalCtrl.dismiss();
   }
 
-  sendMessage() {
-    console.log(this.msg);
+  async sendMessage() {
+    this.sending = true;
+    await this.chatService.addMessage(
+      this.disposalId,
+      'household',
+      this.msg,
+    );
+    this.msg = '';
+    this.sending = false;
   }
 }
-
-const DUMMY_CHAT_MESSAGES = [
-  {
-    sender: 'collector',
-    message: 'Lorem ipsum dolor sit amet, '
-  },
-  {
-    sender: 'household',
-    message: 'consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-  },
-  {
-    sender: 'collector',
-    message: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-  },
-  {
-    sender: 'household',
-    message: 'Duis aute irure dolor in reprehenderit'
-  },
-  {
-    sender: 'collector',
-    message: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-  },
-  {
-    sender: 'household',
-    message: 'Duis aute irure dolor in reprehenderit'
-  },
-];
