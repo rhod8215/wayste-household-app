@@ -1,0 +1,7 @@
+{
+  "name": "wayste-household-app",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

@@ -1,0 +1,44 @@
+.SignUpPage {
+  height: 100%;
+  width: 100%;
+  display: flex;
+}
+
+.SignUpPage-container {
+  margin: 0 auto;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.SignUpPage-logo-container {
+  text-align: center;
+  transform: scale(.5);
+  margin: -48px;
+}
+
+.SignUpPage-logo { }
+
+.SignUpPage-form { }
+
+.validation-errors {
+  font-size: 12px;
+  height: 16px;
+  padding-top: 2px;
+  padding-left: 16px;
+}
+
+.SignUpPage-divider {
+  font-size: 12px;
+  text-align: center;
+}
+
+.SignUpPage-form > ion-button[type='submit'],
+.SignUpPage-authOptions-container > ion-button {
+  margin: 16px 0;
+}
+
+.SignUpPage-otherCTA {
+  text-align: center;
+}

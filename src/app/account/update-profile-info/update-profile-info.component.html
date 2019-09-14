@@ -1,0 +1,57 @@
+<div>
+  <h4 padding-top>Personal Information</h4>
+  <ion-card>
+    <form [formGroup]="updateInfoForm">
+      <ion-item lines="full" text-wrap>
+        <ion-label position="stacked">Name</ion-label>
+        <ion-input [readonly]="!onEdit" type="text" formControlName="name" placeholder="Name"></ion-input>
+      </ion-item>
+      <ion-item lines="full" text-wrap>
+        <ion-label position="stacked">E-mail (disabled)</ion-label>
+        <ion-input [readonly]="!onEdit" type="email" formControlName="email" placeholder="Email"></ion-input>
+      </ion-item>
+      <ion-item lines="full" text-wrap>
+        <ion-label position="stacked">Contact Number</ion-label>
+        <ion-input [readonly]="!onEdit" type="number" formControlName="contactNumber" placeholder="Contact Number"></ion-input>
+      </ion-item>
+
+      <ion-item lines="full" text-wrap>
+        <ion-label position="stacked">Address</ion-label>
+        <ion-input [readonly]="!onEdit" type="text" formControlName="address" placeholder="Address"></ion-input>
+      </ion-item>
+    </form>
+  </ion-card>
+
+  <div *ngIf="error" padding-top padding-left>
+    <ion-note color="danger">{{ error.message }}</ion-note>
+  </div>
+
+  <!-- ACTION BUTTONS -->
+  <ng-container *ngIf="!onEdit">
+    <ion-button expand="block" (click)="enableEdit()">
+      Edit Profile Information
+    </ion-button>
+  </ng-container>
+
+  <ng-container *ngIf="onEdit">
+    <ion-row>
+      <ion-col>
+        <ion-button
+            expand="block"
+            color="light"
+            [disabled]="savingInfo"
+            (click)="cancel()">
+          Cancel
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button
+            expand="block"
+            [disabled]="savingInfo"
+            (click)="saveChanges()">
+          Save
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ng-container>
+</div>

@@ -1,0 +1,75 @@
+<div class="SignInPage">
+  <div class="SignInPage-container">
+    <!-- LOGO -->
+    <div class="SignInPage-logo-container">
+      <img class="SignInPage-logo" src="assets/img/logo_full.png" />
+    </div>
+
+    <!-- FORM CONTAINER -->
+    <div>
+      <form [formGroup]="signInForm" class="SignInPage-form">
+        <ion-item>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input formControlName="email" type="email"></ion-input>
+        </ion-item>
+        <div class="validation-errors">
+          <ng-container *ngIf="f.email.touched && f.email.errors">
+            <ion-text *ngIf="f.email.errors.required" color="danger">
+              Required
+            </ion-text>
+            <ion-text *ngIf="f.email.errors.email" color="danger">
+              Invalid email format
+            </ion-text>
+          </ng-container>
+        </div>
+
+        <ion-item>
+          <ion-label position="floating">Password</ion-label>
+          <ion-input formControlName="password" type="password"></ion-input>
+        </ion-item>
+        <div class="validation-errors">
+          <ng-container *ngIf="f.password.touched && f.password.errors">
+            <ion-text *ngIf="f.password.errors.required" color="danger">
+              Required
+            </ion-text>
+          </ng-container>
+        </div>
+
+        <ion-button [disabled]="processing"
+            (click)="emailPassSignIn()"
+            type="submit"
+            expand="block"
+            color="primary">
+          Sign in
+        </ion-button>
+      </form>
+
+      <div class="SignInPage-divider">OR</div>
+
+      <div class="SignInPage-authOptions-container">
+        <ion-button [disabled]="processing"
+            (click)="googleSignIn()"
+            expand="block"
+            color="danger">
+          <ion-icon slot="start" name="logo-google"></ion-icon>
+          Sign in with Google
+        </ion-button>
+
+        <ion-button [disabled]="processing"
+            (click)="fbSignIn()"
+            expand="block"
+            color="tertiary">
+          <ion-icon slot="start" name="logo-facebook"></ion-icon>
+          Sign in with Facebook
+        </ion-button>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="SignInPage-otherCTA">
+      <ion-button (click)="goToSignUp()" fill="clear" color="dark">
+        Don't have an account? Sign Up
+      </ion-button>
+    </div>
+  </div>
+</div>

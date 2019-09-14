@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Crop photo
+    </ion-title>
+    <ion-buttons slot="start">
+        <ion-button (click)="dismiss()" [disabled]="uploading">
+          <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-buttons slot="primary">
+        <ion-button (click)="confirm()" [disabled]="uploading">
+          UPLOAD
+        </ion-button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <div class="PhotoCropper-container">
+    <angular-cropper
+        #photoCropper
+        [cropperOptions]="config"
+        [imageUrl]="imageDataUrl"></angular-cropper>
+
+     <ng-container *ngIf="uploading">
+       Uploading...
+     </ng-container>
+  </div>
+</ion-content>

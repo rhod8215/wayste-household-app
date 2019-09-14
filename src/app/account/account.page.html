@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Account
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding class="AppPageContent">
+  <ng-container *ngIf="isAccountLoaded; else loadingAccount">
+    <!-- PROFILE PHOTO -->
+    <div class="AccountPage-avatar-container">
+      <img class="AccountPage-avatar"
+          [src]="appUserInfo?.photoUrl || 'assets/img/dp_paui.png'" alt=""/>
+      <input type="file"
+          accept="image/*"
+          (change)="onFileChange($event)"
+          #imageFileInput
+          hidden />
+    </div>
+    <ion-button
+        expand="block"
+        padding
+        (click)="openFileDialog(imageFileInput)">
+      Change Profile Picture
+    </ion-button>
+
+    <!-- PROFILE INFO -->
+    <app-update-profile-info [(appUserInfo)]="appUserInfo"></app-update-profile-info>
+
+    <!-- TO DO: Function to change password -->
+    <!--
+    <h4>Password</h4>
+    <div>
+      <ion-button expand="block">
+        Change password
+      </ion-button>
+    </div>
+     -->
+  </ng-container>
+
+  <ng-template #loadingAccount>
+    Loading...
+  </ng-template>
+</ion-content>

@@ -1,0 +1,17 @@
+<div>
+  <ion-button (click)="openFileDialog(imageFileList)"
+      type="button"
+      fill="clear"
+      size="medium"
+      color="medium"
+      expand="block"
+      strong="true">
+    <ion-icon name="add-circle" size="small" slot="start"></ion-icon>
+      Add photo
+  </ion-button>
+  <input type="file"
+      accept="image/*"
+      (change)="onFileChange($event)"
+      #imageFileList
+      hidden />
+</div>

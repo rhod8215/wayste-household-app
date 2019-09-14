@@ -1,0 +1,66 @@
+<div class="SignUpPage">
+  <div class="SignUpPage-container">
+    <!-- LOGO -->
+    <div class="SignUpPage-logo-container">
+      <img class="SignUpPage-logo" src="assets/img/logo_full.png" />
+    </div>
+
+    <!-- FORM -->
+    <form [formGroup]="signUpForm" class="SignUpPage-form">
+      <!-- FULL NAME -->
+      <ion-item>
+        <ion-label position="floating">Full Name</ion-label>
+        <ion-input formControlName="fullName" type="text"></ion-input>
+      </ion-item>
+      <div class="validation-errors">
+        <ng-container *ngIf="f.fullName.touched && f.fullName.errors">
+          <ion-text *ngIf="f.fullName.errors.required" color="danger">Required</ion-text>
+        </ng-container>
+      </div>
+
+      <!-- EMAIL -->
+      <ion-item>
+        <ion-label position="floating">Email</ion-label>
+        <ion-input formControlName="email" type="email"></ion-input>
+      </ion-item>
+      <div class="validation-errors">
+        <ng-container *ngIf="f.email.touched && f.email.errors">
+          <ion-text *ngIf="f.email.errors.required" color="danger">Required</ion-text>
+          <ion-text *ngIf="f.email.errors.email" color="danger">Invalid email format</ion-text>
+        </ng-container>
+      </div>
+
+      <!-- PASSWORD -->
+      <ion-item>
+        <ion-label position="floating">Password</ion-label>
+        <ion-input formControlName="password" type="password"></ion-input>
+      </ion-item>
+      <div class="validation-errors">
+        <ng-container *ngIf="f.password.touched && f.password.errors">
+          <ion-text *ngIf="f.password.errors.required" color="danger">Required</ion-text>
+        </ng-container>
+      </div>
+
+      <ion-button [disabled]="processing"
+          (click)="emailPassSignUp()"
+          type="submit"
+          expand="block"
+          color="primary">
+        Sign up
+      </ion-button>
+      <div>
+        <!-- TO DO: '/terms' and '/privacy-policy' routes -->
+        <ion-note>
+          By signing up, you agree to the <a routerLink="/terms">Terms</a> and <a routerLink="/privacy-policy">Privacy Policy</a> of the app.
+        </ion-note>
+      </div>
+    </form>
+
+    <!-- CTA -->
+    <div class="SignUpPage-otherCTA">
+      <ion-button (click)="goToSignIn()" fill="clear" color="dark">
+        Already have an account? Sign In
+      </ion-button>
+    </div>
+  </div>
+</div>

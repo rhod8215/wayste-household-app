@@ -1,0 +1,16 @@
+.AccountPage-avatar-container {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  margin: auto;
+  box-sizing: border-box;
+  border: 2px solid rgb(190, 190, 190);
+  border-radius: 100%;
+}
+
+.AccountPage-avatar {
+  margin: auto;
+  border-radius: inherit;
+  height: inherit;
+  width: inherit;
+}
